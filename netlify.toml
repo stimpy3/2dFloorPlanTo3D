@@ -1,5 +1,3 @@
-# Create netlify.toml file
-@"
 [build]
   command = "npm run build"
   publish = "dist"
@@ -8,4 +6,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-"@ | Out-File -FilePath netlify.toml -Encoding utf8
