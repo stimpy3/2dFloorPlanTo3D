@@ -28,7 +28,11 @@ WEIGHTS_FILE_NAME = "maskrcnn_15_epochs.h5"
 
 # ===================== FLASK =====================
 application = Flask(__name__)
-CORS(application, resources={r"/*": {"origins": "*"}})
+CORS(application, resources={r"/*": {"origins": [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://2dto3dfloorplan.netlify.app"
+]}})
 
 # ===================== GLOBALS =====================
 _model = None
