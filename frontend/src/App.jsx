@@ -7,9 +7,12 @@ import ModelViewerFullScreen from "./ModelViewerFullScreen";
 /* ===================== API CALL ===================== */
 async function sendToAPI(file) {
   const formData = new FormData();
-  formData.append("image", file); // MUST be "image"
+  formData.append("image", file);
 
-  const res = await fetch("http://localhost:5000/", {
+  const API_BASE_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+  const res = await fetch(`${API_BASE_URL}/`, {
     method: "POST",
     body: formData,
   });
@@ -20,6 +23,7 @@ async function sendToAPI(file) {
 
   return res.json();
 }
+
 /* ===================== UPLOADER ===================== */
 
 function Uploader({ onFiles }) {
