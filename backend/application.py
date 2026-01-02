@@ -67,20 +67,38 @@ class PredictionConfig(Config):
 	GPU_COUNT = 1
 	IMAGES_PER_GPU = 1
 	
+
 @application.before_first_request
 def load_model():
-	global cfg
-	global _model
-	model_folder_path = os.path.abspath("./") + "/mrcnn"
-	weights_path= os.path.join(WEIGHTS_FOLDER, WEIGHTS_FILE_NAME)
-	cfg=PredictionConfig()
-	print(cfg.IMAGE_RESIZE_MODE)
-	print('==============before loading model=========')
-	_model = MaskRCNN(mode='inference', model_dir=model_folder_path,config=cfg)
-	print('=================after loading model==============')
-	_model.load_weights(weights_path, by_name=True)
-	global _graph
-	_graph = tf.get_default_graph()
+    global cfg
+    global _model
+
+    # ------------------- START: download weights if missing -------------------
+    os.makedirs(WEIGHTS_FOLDER, exist_ok=True)
+    weights_path = os.path.join(WEIGHTS_FOLDER, WEIGHTS_FILE_NAME)
+
+    if not os.path.exists(weights_path):
+        print("Downloading weights from Google Drive...")
+        url = "https://drive.google.com/uc?export=download&id=1uPlVjiI3OZpwS6cUtkC_Z5cSk96rZMwW"
+        import requests
+        r = requests.get(url, allow_redirects=True)
+        with open(weights_path, "wb") as f:
+            f.write(r.content)
+        print("Weights downloaded!")
+    # ------------------- END: download weights -------------------
+
+    model_folder_path = os.path.abspath("./") + "/mrcnn"
+    cfg = PredictionConfig()
+    print(cfg.IMAGE_RESIZE_MODE)
+    print('==============before loading model=========')
+    _model = MaskRCNN(mode='inference', model_dir=model_folder_path, config=cfg)
+    print('=================after loading model==============')
+    _model.load_weights(weights_path, by_name=True)
+
+    global _graph
+    _graph = tf.get_default_graph()
+
+
 
 def myImageLoader(imageInput):
 	# convert to numpy array
