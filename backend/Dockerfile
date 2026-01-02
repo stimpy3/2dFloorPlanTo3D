@@ -2,12 +2,14 @@ FROM tensorflow/tensorflow:1.15.5-py3
 
 WORKDIR /workspace
 
-# Copy everything
-COPY . /workspace
+COPY requirements.txt .
 
-# Upgrade pip & install all requirements
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install gunicorn
 
-# Run the application
-CMD ["python", "application.py"]
+COPY . .
+
+EXPOSE 5000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "application:application"]
