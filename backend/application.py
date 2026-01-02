@@ -173,9 +173,25 @@ def prediction():
 	return jsonify(data)
 
     
-if __name__ =='__main__':
-    application.debug=True
-    print('===========before running==========')
-    application.run(host="0.0.0.0", port=5000)
-    print('===========after running==========')
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    debug = os.environ.get("FLASK_DEBUG", "0") == "1"
+
+    application.debug = debug
+
+    print("=========== before running ===========")
+    print(f"Environment : {'production' if 'PORT' in os.environ else 'local'}")
+    print(f"Debug mode  : {debug}")
+    print(f"Port        : {port}")
+    print("======================================")
+
+    application.run(
+        host="0.0.0.0",
+        port=port,
+        debug=debug,
+        use_reloader=False  # IMPORTANT for TensorFlow
+    )
+
+    print("=========== after running ===========")
+
 
