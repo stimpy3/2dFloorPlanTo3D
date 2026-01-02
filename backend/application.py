@@ -78,13 +78,13 @@ def load_model():
     weights_path = os.path.join(WEIGHTS_FOLDER, WEIGHTS_FILE_NAME)
 
     if not os.path.exists(weights_path):
-        print("Downloading weights from Google Drive...")
-        url = "https://drive.google.com/uc?export=download&id=1uPlVjiI3OZpwS6cUtkC_Z5cSk96rZMwW"
-        import requests
-        r = requests.get(url, allow_redirects=True)
-        with open(weights_path, "wb") as f:
-            f.write(r.content)
-        print("Weights downloaded!")
+     print("Downloading weights with gdown...")
+     import gdown
+     url = "https://drive.google.com/uc?id=1uPlVjiI3OZpwS6cUtkC_Z5cSk96rZMwW"
+     gdown.download(url, weights_path, quiet=False)
+    
+
+    
     # ------------------- END: download weights -------------------
 
     model_folder_path = os.path.abspath("./") + "/mrcnn"
